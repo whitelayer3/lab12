@@ -1,0 +1,50 @@
+//ident.l
+
+%{
+#include<stdio.h>
+#include"y.tab.h"
+%}
+%%
+[0-9]+ {return NUMBER;}
+[a-zA-Z]+ {return LETTER;}
+[\t] ;
+[\n] return 0;
+. {return yytext[0];}
+%%
+int yywrap()
+{
+return 1;
+}
+
+
+//ident.y
+
+%{
+#include<stdio.h>
+int flag=0;
+int yylex();
+void yyerror();
+%}
+%token NUMBER LETTER
+%%
+STATEMENT:S;
+S:LETTER B
+| LETTER;
+B:LETTER B
+|NUMBER B
+| LETTER
+|NUMBER
+;
+%%
+void main()
+{
+printf("Enter any word as Identifier:\n");
+yyparse();
+if(flag==0)
+printf("Entered Identifier is Valid\n\n");
+}
+void yyerror()
+{
+printf("Entered Identifier is Invalid \n\n");
+flag=1;
+}
